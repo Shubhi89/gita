@@ -1,132 +1,157 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import ChapterList from '$lib/components/ChapterList.svelte';
-  import VerseList from '$lib/components/VerseList.svelte';
-  import type { Verse } from '$lib/types';
+  import ChapterGrid from '$lib/components/ChapterGrid.svelte';
+  import VerseGrid from '$lib/components/VerseGrid.svelte';
+  import PlayerModal from '$lib/components/PlayerModel.svelte';
+  import type { Verse, ApiResponse } from '$lib/types';
+  import logo from '$lib/assets/logo.png'
 
-  let currentChapter = 1;
+  
+
+  // State Management
+  let view: 'chapters' | 'verses' = 'chapters';
+  let currentChapter = 0;
   let verses: Verse[] = [];
-  let isLoading = true;
-  let error: string | null = null;
+  let selectedVerse: Verse | null = null;
+  let isLoading = false;
+  let error = '';
 
-  // The API Endpoint provided
-  const BASE_URL = 'https://sanskrit.ie/api/geeta.php';
 
-  async function fetchChapter(chapterId: number) {
-    currentChapter = chapterId;
+
+  // API Call
+  async function loadChapter(chapter: number) {
+    currentChapter = chapter;
+    view = 'verses';
     isLoading = true;
-    error = null;
+    error = '';
     verses = [];
 
     try {
-      const res = await fetch(`${BASE_URL}?q=${chapterId}`);
+      const res = await fetch(`https://sanskrit.ie/api/geeta.php?q=${chapter}`);
+      const data: ApiResponse = await res.json();
       
-      if (!res.ok) throw new Error(`API Error: ${res.statusText}`);
-      
-      const data = await res.json();
-      
-      // Data normalization: Ensure the API response maps to our Verse type
-      // If the API returns a different structure, adjust this map function.
-      verses = Array.isArray(data) ? data : []; 
-      
-    } catch (err) {
-      console.error(err);
-      error = "Unable to load verses. Please check your connection.";
+      if (data.message === "No Data found") {
+        error = "Data Not Found";
+      } else {
+        verses = data.data;
+      }
+    } catch (e) {
+      error = "Failed to load chapter. Please try again.";
+      console.error(e);
     } finally {
       isLoading = false;
     }
   }
 
-  // Load Chapter 1 immediately on page load
-  onMount(() => {
-    fetchChapter(1);
-  });
+  function goBack() {
+    view = 'chapters';
+    verses = [];
+    error = '';
+  }
 </script>
 
 <svelte:head>
-  <title>Bhagavad Gita - Chapter {currentChapter}</title>
-  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Noto+Sans+Devanagari:wght@400;700&display=swap" rel="stylesheet">
+  <title>Bhagavad Gita</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari&display=swap" rel="stylesheet">
+  <link href="./index.css" rel="stylesheet"/>
 </svelte:head>
 
-<div class="app-layout">
-  <aside class="sidebar">
-    <ChapterList 
-      activeChapter={currentChapter} 
-      onSelect={fetchChapter} 
-    />
-  </aside>
+<header class="navbar">
+  <div class="container">
+    <span class="brand">
+        <img src={logo} alt="Bhagavad Gita Logo" style="width: 25%;"/>
+    </span>
+    <nav>
+      <ul class="nav-links">
+        <li>AYURVEDA</li>
+        <li>YOGASUTRAS</li>
+        <li>BHAGAVAD GITA</li>
+        <li>UPANISADS</li>
+        <li>SANSKRIT</li>
+        <li>CONTACT US</li>
+      </ul>
+    </nav>
+  </div>
+</header>
 
-  <main class="content">
-    <header class="page-header">
-      <h1>Bhagavad Gītā</h1>
-      <p>Chapter {currentChapter}</p>
-    </header>
+<main class="main-content">
+  <div class="banner">
+    <h1 class="inner_head">BHAGAVAD GITA</h1>
+    <div class="container border_bg hero-container">
+        
+    </div> </div>
 
-    {#if isLoading}
-      <div class="loading">Loading Sanskrit verses...</div>
-    {:else if error}
-      <div class="error">
-        <p>{error}</p>
-        <button on:click={() => fetchChapter(currentChapter)}>Retry</button>
+  <section class="app-area">
+    {#if view === 'chapters'}
+      <div class="section-head">
+        <p>GITA CHAPTERS</p>
       </div>
+      <ChapterGrid onSelect={loadChapter} />
+    
     {:else}
-      <VerseList {verses} />
+      <div class="verse-view">
+        <button class="back-btn" on:click={goBack}>&lt; Back</button>
+        
+        <div class="section-head">
+          <p>CHAPTER {currentChapter}</p>
+        </div>
+
+        {#if isLoading}
+          <div class="loader">Loading Verses...</div>
+        {:else if error}
+          <div class="error-msg">{error}</div>
+        {:else}
+          <VerseGrid {verses} onSelect={(v) => selectedVerse = v} />
+        {/if}
+      </div>
     {/if}
-  </main>
-</div>
+  </section>
+</main>
+
+{#if selectedVerse}
+  <PlayerModal 
+    verse={selectedVerse} 
+    onClose={() => selectedVerse = null} 
+  />
+{/if}
 
 <style>
-  :global(body) {
-    margin: 0;
-    font-family: 'Merriweather', serif;
-    background-color: #f9f9f9;
+  :global(body) { margin: 0; font-family: sans-serif; background-color: #f9f9f9; }
+  
+  .navbar { background: #f8f9fa; padding: 1rem; border-bottom: 1px solid #ddd; }
+  .container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; }
+  .brand { font-weight: bold; font-size: 1.2rem; max-width: 100%; width: 60%;}
+  
+  .banner { text-align: center; padding: 2rem; background: #fff; margin-bottom: 1rem; }
+  .book-icon { font-size: 4rem; margin-top: 1rem; }
+
+  .app-area { max-width: 1000px; margin: 0 auto; background: white; min-height: 500px; padding-bottom: 2rem; }
+  
+  .section-head { 
+    background: #8b0000; color: white; text-align: center; 
+    padding: 10px; font-weight: bold; margin-bottom: 20px;
   }
 
-  .app-layout {
+  .back-btn {
+    margin: 10px; padding: 5px 15px; background: #333; color: white;
+    border: none; cursor: pointer;
+  }
+
+  .inner_head {
+    font-size: 7em;
+    color: #3E4939;
+    padding-bottom: 10px;
+    margin-bottom: -.75em;
+    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    justify-content: center;
     display: flex;
-    min-height: 100vh;
-  }
+    position: inherit;
+    z-index: 1;
+    background-color: #ffffffa3;
+}
 
-  .content {
-    flex: 1;
-    height: 100vh;
-    overflow-y: auto;
-  }
+  .nav-links { list-style: none; display: flex; gap: 25px; margin: 10px; }
+  .nav-links li { cursor: pointer; font-size: 0.7rem; margin-right: 15px; }
 
-  .page-header {
-    background: white;
-    padding: 2rem;
-    text-align: center;
-    border-bottom: 1px solid #eee;
-  }
-
-  h1 {
-    margin: 0;
-    color: #8b0000;
-  }
-
-  .loading, .error {
-    text-align: center;
-    padding: 4rem;
-    font-size: 1.2rem;
-    color: #666;
-  }
-
-  /* Mobile Responsive Layout */
-  @media (max-width: 768px) {
-    .app-layout {
-      flex-direction: column;
-    }
-    
-    .sidebar {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .content {
-      height: auto;
-      overflow-y: visible;
-    }
-  }
+  .loader, .error-msg { text-align: center; padding: 2rem; font-size: 1.2rem; }
+  .error-msg { color: red; }
 </style>
