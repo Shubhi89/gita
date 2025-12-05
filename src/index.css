@@ -1774,7 +1774,7 @@ footer .border-right {
 }
 
 .footer_bottom {
-    background-image: url("../images/footerimg.png") !important;
+    background-image: url("../src/lib/assets/footerimg.png") !important;
     border-top: solid 1px #ffffff14;
     text-align: center;
     font-size: 14px;

@@ -1,9 +1,10 @@
 <script lang="ts">
   // 1. Import Global Styles
   import "../index.css";
-  import img from "$lib/assets/logo.png";
+  import img from "$lib/assets/logo2.png";
   import img2 from "$lib/assets/gita_open.png";
   import img3 from "$lib/assets/gita_book.jpg";
+  import img4 from "$lib/assets/logo.png";
 
   // 2. Import Components & Types
   import type { Verse, ApiResponse } from "$lib/types";
@@ -80,7 +81,7 @@
   <nav class="navbar navbar-expand-lg bg-light navbar-light">
     <div class="container nav-container">
       <a class="navbar-brand" href="#">
-        <img src={img} alt="Logo" />
+        <img src={img4} alt="Logo" />
       </a>
       <button
         class="navbar-toggler"
@@ -161,6 +162,23 @@
     </div>
   </section>
 </div>
+<div class="footer">
+
+</div>
+<div class="p-1 footer_bottom">
+            <div class="social_icon">
+                <ul class="list-unstyled">
+                    <li class="connect"><h4>Connect</h4></li>
+                    <li><a href="#" target="_blank"><i class="fab fa-facebook"></i></a></li>
+                    <li><a href="#" target="_blank"><i class="fab fa-twitter"></i></a></li>
+                    <li><a href="#" target="_blank"><i class="fab fa-youtube"></i></a></li>
+                    <li><a href="#"><i class="fab fa-safari"></i></a></li>
+                </ul>
+            </div>
+            <img src={img} alt="logo"/>
+            <h1 class="footer-showcase">WELLBEING~SVASTI</h1>
+            <p>© 2025 Rutger Kortenhorst. All Rights Reserved | Design and Developed by <a href="#">Burning Desire Inclusive</a></p>
+        </div>
 
 <!-- <main class="main-content">
   <div class="banner">
