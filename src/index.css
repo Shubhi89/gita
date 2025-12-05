@@ -1835,11 +1835,10 @@ footer .border-right {
 
 .inner-pad {
     padding: 8em 0 0em 0;
-
 }
 
 .inner_background {
-    background: url(../images/pic1.jpg) fixed top center no-repeat;
+    background: url(../src/lib/assets/gita_banner.png) fixed top center no-repeat;
     /* background-color: #FFFF; */
     /* padding: 8em 0 0em 0; */
     width: 100%;

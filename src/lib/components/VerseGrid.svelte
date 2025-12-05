@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
   import type { Verse } from '$lib/types';
   export let verses: Verse[] = [];
   export let onSelect: (v: Verse) => void;
@@ -72,4 +72,4 @@
     color: #8b0000;
     font-size: 0.8rem;
   }
-</style>
+</style> -->

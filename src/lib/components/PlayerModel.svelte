@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
   import type { Verse } from '$lib/types';
   export let verse: Verse;
   export let onClose: () => void;
@@ -96,4 +96,4 @@
   }
 
   .audio-player { width: 100%; }
-</style>
+</style> -->
