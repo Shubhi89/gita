@@ -132,6 +132,8 @@
     </div>
   </nav>
 </header>
+<div class="row">
+</div>
 <div class="inner_background inner-pad">
   <h1 class="inner_head">BHAGAVAD GITA</h1>
   <div class="container border_bg hero-container16">
@@ -143,7 +145,7 @@
     </div>
   </div>
 </div>
-<div class="inner_background shlok_inner" style="padding:0px;">
+<div class="main-content-bg inner-pad inner_background shlok_inner" style="padding:0px;">
   <section class="chapter_main">
     <div class="chapter_head">
       <p>GITA CHAPTERS</p>
