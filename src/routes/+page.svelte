@@ -5,6 +5,7 @@
   import img2 from "$lib/assets/gita_open.png";
   import img3 from "$lib/assets/gita_book.jpg";
   import img4 from "$lib/assets/logo.png";
+  import img5 from "$lib/assets/sletter.png";
 
   // 2. Import Components & Types
   import type { Verse, ApiResponse } from "$lib/types";
@@ -35,17 +36,26 @@
     verses = [];
 
     try {
-      const res = await fetch(`https://sanskrit.ie/api/geeta.php?q=${id}`);
+      // FIX: Use 'api.allorigins.win' proxy to bypass CORS restrictions
+      const targetUrl = `https://sanskrit.ie/api/geeta.php?q=${id}`;
+      const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
+
+      const res = await fetch(proxyUrl);
+
+      if (!res.ok) throw new Error("Network response was not ok");
+
       const data: ApiResponse = await res.json();
+      console.log("API Data:", data);
 
       if (data.message === "No Data found") {
         error = "No verses found for this chapter.";
       } else {
         verses = data.data;
+        console.log("Verses:", verses);
       }
     } catch (err) {
       error = "Failed to load data. Please check connection.";
-      console.error(err);
+      console.error("API Error:", err);
     } finally {
       isLoading = false;
     }
@@ -55,17 +65,6 @@
     view = "chapters";
     verses = [];
     error = null;
-  }
-
-  function openPlayer(verse: Verse) {
-    selectedVerse = verse;
-    // Reset player state when opening new verse
-    fontSize = 24;
-    isProjectorMode = false;
-  }
-
-  function closePlayer() {
-    selectedVerse = null;
   }
 </script>
 
@@ -132,8 +131,7 @@
     </div>
   </nav>
 </header>
-<div class="row">
-</div>
+<div class="row"></div>
 <div class="inner_background inner-pad">
   <h1 class="inner_head">BHAGAVAD GITA</h1>
   <div class="container border_bg hero-container16">
@@ -145,82 +143,97 @@
     </div>
   </div>
 </div>
-<div class="main-content-bg inner-pad inner_background shlok_inner" style="padding:0px;">
-  <section class="chapter_main">
-    <div class="chapter_head">
-      <p>GITA CHAPTERS</p>
-    </div>
-    <div class="chapter_container">
-      {#each chapters as chapter}
-        <div class="chapter">
-          <div class="chapter_img">
-            <img src={img3} alt="Chapter Background" />
-          </div>
-          <div class="chapter_num">
-            <p>{chapter}</p>
-          </div>
-        </div>
-      {/each}
-    </div>
-  </section>
-</div>
-<footer>
-</footer>
-<div class="p-1 footer_bottom">
-            <div class="social_icon">
-                <ul class="list-unstyled">
-                    <li class="connect"><h4>Connect</h4></li>
-                    <li><a href="#" target="_blank"><i class="fab fa-facebook"></i></a></li>
-                    <li><a href="#" target="_blank"><i class="fab fa-twitter"></i></a></li>
-                    <li><a href="#" target="_blank"><i class="fab fa-youtube"></i></a></li>
-                    <li><a href="#"><i class="fab fa-safari"></i></a></li>
-                </ul>
+<div class="inner_background shlok_inner" style="padding:0px;">
+  {#if view === "chapters"}
+    <section class="chapter_main">
+      <div class="chapter_head">
+        <p>GITA CHAPTERS</p>
+      </div>
+      <div class="chapter_container">
+        {#each chapters as chapter}
+          <div
+            class="chapter"
+            on:click={() => loadChapter(chapter)}
+            role="button"
+            tabindex="0"
+            on:keypress={(e) => e.key === "Enter" && loadChapter(chapter)}
+          >
+            <div class="chapter_img">
+              <img src={img3} alt="Chapter Background" />
             </div>
-            <img src={img} alt="logo"/>
-            <h1 class="footer-showcase">WELLBEING~SVASTI</h1>
-            <p>© 2025 Rutger Kortenhorst. All Rights Reserved | Design and Developed by <a href="#">Burning Desire Inclusive</a></p>
+            <div class="chapter_num">
+              <p>{chapter}</p>
+            </div>
+          </div>
+        {/each}
+      </div>
+    </section>
+  {:else}
+    <section class="shlok" style="display:block;">
+      <div class="shlok_main">
+        <div class="back_chapter" on:click={() => goBack()}>Back</div>
+        <div class="shlok_head">
+          <p>CHAPTER {currentChapter}</p>
         </div>
+        <div class="shlok_sort">
+          <div class="shlok_h">
+            <p>Verse</p>
+          </div>
+        </div>
+        {#if isLoading}
+          <div class="loader"></div>
+        {:else if error}
+          <div class="error_box_shlok" style="display:block;">{error}</div>
+        {:else}
+          <div class="shlok_container">
+            <div class="shlok_area">
+              {#each verses as verse, i}
+                <div class="shlok_img" role="button" tabindex="0">
+                  <img src={img5} alt="Chapter Background" />
+                  <div class="shlok_num">
+                    {#if i === 0}
+                      <p>Whole Chapter</p>
+                    {:else}
+                      <p>{i}</p>
+                    {/if}
+                  </div>
+                </div>
+              {/each}
+            </div>
+            {#if selectedVerse}
+              <div class="song-popup" style="display:flex;">
+                <div class="content-box">
+                  <div class="lyrics-container">
+                    <div class="lyrics" style="font-size: {fontSize}px;">
+                      <!-- {@html selectedVerse.lyrics} -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {/if}
+          </div>
+        {/if}
+      </div>
+    </section>
+  {/if}
+</div>
 
-<!-- <main class="main-content">
-  <div class="banner">
-    <h1 class="page-title">BHAGAVAD GITA</h1>
-    <div class="book-icon">📖</div>
+<footer></footer>
+<div class="p-1 footer_bottom">
+  <div class="social_icon">
+    <ul class="list-unstyled">
+      <li class="connect"><h4>Connect</h4></li>
+      <li><a href="#" target="_blank"><i class="fab fa-facebook"></i></a></li>
+      <li><a href="#" target="_blank"><i class="fab fa-twitter"></i></a></li>
+      <li><a href="#" target="_blank"><i class="fab fa-youtube"></i></a></li>
+      <li><a href="#"><i class="fab fa-safari"></i></a></li>
+    </ul>
   </div>
-
-  <div class="app-container">
-    {#if view === 'chapters'}
-      <div class="section-head">GITA CHAPTERS</div>
-      
-      <ChapterGrid 
-        {chapters} 
-        onSelect={loadChapter} 
-      />
-    
-    {:else}
-      <button class="back-btn" on:click={goBack}>&lt; Back to Chapters</button>
-      <div class="section-head">CHAPTER {currentChapter}</div>
-
-      {#if isLoading}
-        <div class="loader">Loading verses...</div>
-      {:else if error}
-        <div class="error-msg">{error}</div>
-      {:else}
-        <VerseGrid 
-          {verses} 
-          onSelect={openPlayer} 
-        />
-      {/if}
-    {/if}
-  </div>
-</main>
-
-{#if selectedVerse}
-  <PlayerModal 
-    verse={selectedVerse}
-    {fontSize}
-    {isProjectorMode}
-    onClose={closePlayer}
-    onToggleProjector={() => isProjectorMode = !isProjectorMode}
-    onFontSizeChange={(newSize) => fontSize = newSize}
-  />
-{/if} -->
+  <img src={img} alt="logo" />
+  <h1 class="footer-showcase">WELLBEING~SVASTI</h1>
+  <p>
+    © 2025 Rutger Kortenhorst. All Rights Reserved | Design and Developed by <a
+      href="#">Burning Desire Inclusive</a
+    >
+  </p>
+</div>
