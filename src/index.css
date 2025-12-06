@@ -3849,12 +3849,3 @@ height: 144px;
     }
 
 }
-
-.main-content-bg {
-    width: 100%;
-    float: left;
-    position: relative;
-    background-color: #fff; /* Solid white background hides the fixed banner */
-    min-height: 600px;
-    z-index: 10;
-}
