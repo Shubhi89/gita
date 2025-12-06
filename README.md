@@ -72,8 +72,6 @@ The application retrieves data dynamically.
 
 ## 🤝 Credits
 
-* **Content:** © 2025 Rutger Kortenhorst
-* **Design & Development:** Burning Desire Inclusive
 * **Images & Assets:** Provided in the `src/lib/assets` directory.
 
 ## 📄 License
