@@ -33,7 +33,7 @@ Follow these steps to set up the project locally.
 
 1.  **Clone the repository:**
     ```bash
-    git clone [https://github.com/yourusername/gita-app.git](https://github.com/yourusername/gita-app.git)
+    git clone [https://github.com/yourusername/gita-app.git]
     cd gita-app
     ```
 
