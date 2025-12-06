@@ -246,7 +246,7 @@
 </div>
 
 {#if selectedVerse}
-  <div class="song_popup">
+  <div class="song_popup" style="display: block;">
     <div class="deliveryOverlay"></div>
     <div class="song_pop_close" on:click={closeVerse}>x</div>
     <div class="inner_background_pop">
