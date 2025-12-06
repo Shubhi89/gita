@@ -204,7 +204,7 @@
                   <img src={img5} alt="verse background" />
                   <div class="shlok_num">
                     {#if i === 0}
-                      <p>Whole Chapter</p>
+                      <p>Full</p>
                     {:else}
                       <p>{i}</p>
                     {/if}
@@ -243,17 +243,17 @@
 </div>
 
 {#if selectedVerse}
-  <div class="song_popup" style="display: block;">
+  <div class="verse_popup" style="display: block;">
     <div class="deliveryOverlay"></div>
-    <div class="song_pop_close" on:click={closeVerse}>x</div>
+    <div class="verse_pop_close" on:click={closeVerse}>x</div>
     <div class="inner_background_pop">
       <div>
         <center>
-          <div class="col-md-8 music_popup">
-            <div class="music-bg">
-              <div class="music_box_contral">
+          <div class="col-md-8 lyrics_popup">
+            <div class="lyrics-bg">
+              <div class="lyrics_box_contral">
                 <div class="lyrics">
-                  <div class="music-single" id="lyrics">
+                  <div class="lyrics-single" id="lyrics">
                     <p style="text-align:justify;">&nbsp;</p>
                     <p style="text-align:justify;">
                       <span
