@@ -254,7 +254,9 @@ footer .border-right {
 }
 
 .chapter_container {
-  padding: 0em 6em;
+  display: flex; 
+  flex-wrap: wrap; 
+  justify-content: center;
 }
 
 .chapter {
@@ -612,7 +614,8 @@ footer .border-right {
   background-color: rgba(0, 0, 0, 0.6);
   width: 100%;
   float: left;
-  height: 250px;
+  height: auto;
+  min-height: 200px;
   border-radius: 11px;
 }
 
@@ -668,7 +671,7 @@ footer .border-right {
   overflow: auto;
   border-radius: 11px;
   padding: 1em 7em;
-  max-height: 70vh;
+  max-height: 60vh;
 }
 
 /* width */
