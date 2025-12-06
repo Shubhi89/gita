@@ -1,5 +1,4 @@
 <script lang="ts">
-  // 1. Import Global Styles
   import "../index.css";
   import img from "$lib/assets/logo2.png";
   import img2 from "$lib/assets/gita_open.png";
@@ -7,7 +6,6 @@
   import img4 from "$lib/assets/logo.png";
   import img5 from "$lib/assets/sletter.png";
 
-  // 2. Import Components & Types
   import type { Verse, ApiResponse } from "$lib/types";
 
   // --- LOGIC SECTION ---
@@ -23,7 +21,7 @@
   let verses: Verse[] = [];
   let selectedVerse: Verse | null = null;
 
-  // UI State (Lifted from PlayerModal)
+  // UI State
   let fontSize = 24;
   let isProjectorMode = false;
 
@@ -36,7 +34,6 @@
     verses = [];
 
     try {
-      // FIX: Use 'api.allorigins.win' proxy to bypass CORS restrictions
       const targetUrl = `https://sanskrit.ie/api/geeta.php?q=${id}`;
         const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
 
