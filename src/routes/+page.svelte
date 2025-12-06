@@ -38,7 +38,7 @@
     try {
       // FIX: Use 'api.allorigins.win' proxy to bypass CORS restrictions
       const targetUrl = `https://sanskrit.ie/api/geeta.php?q=${id}`;
-      const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
+        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
 
       const res = await fetch(proxyUrl);
 
@@ -65,6 +65,15 @@
     view = "chapters";
     verses = [];
     error = null;
+  }
+  function openVerse(verse: Verse) {
+    selectedVerse = verse;
+    fontSize = 24; // Reset defaults
+    isProjectorMode = false;
+  }
+
+  function closeVerse() {
+    selectedVerse = null;
   }
 </script>
 
@@ -188,8 +197,14 @@
           <div class="shlok_container">
             <div class="shlok_area">
               {#each verses as verse, i}
-                <div class="shlok_img" role="button" tabindex="0">
-                  <img src={img5} alt="Chapter Background" />
+                <div
+                  class="shlok_img"
+                  on:click={() => openVerse(verse)}
+                  role="button"
+                  tabindex="0"
+                  on:keypress={(e) => e.key === "Enter" && openVerse(verse)}
+                >
+                  <img src={img5} alt="verse background" />
                   <div class="shlok_num">
                     {#if i === 0}
                       <p>Whole Chapter</p>
@@ -201,15 +216,7 @@
               {/each}
             </div>
             {#if selectedVerse}
-              <div class="song-popup" style="display:flex;">
-                <div class="content-box">
-                  <div class="lyrics-container">
-                    <div class="lyrics" style="font-size: {fontSize}px;">
-                      <!-- {@html selectedVerse.lyrics} -->
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <div>selected</div>
             {/if}
           </div>
         {/if}
@@ -237,3 +244,34 @@
     >
   </p>
 </div>
+
+{#if selectedVerse}
+  <div class="song_popup">
+    <div class="deliveryOverlay"></div>
+    <div class="song_pop_close" on:click={closeVerse}>x</div>
+    <div class="inner_background_pop">
+      <div>
+        <center>
+          <div class="col-md-8 music_popup">
+            <div class="music-bg">
+              <div class="music_box_contral">
+                <div class="lyrics">
+                  <div class="music-single" id="lyrics">
+                    <p style="text-align:justify;">&nbsp;</p>
+                    <p style="text-align:justify;">
+                      <span
+                        class="text-huge"
+                        style="color:hsl(0, 0%, 0%);font-family:Tahoma, Geneva, sans-serif;"
+                        >{@html selectedVerse.lyrics}</span
+                      >
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div></center
+        >
+      </div>
+    </div>
+  </div>
+{/if}
