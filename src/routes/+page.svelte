@@ -162,9 +162,8 @@
     </div>
   </section>
 </div>
-<div class="footer">
-
-</div>
+<footer>
+</footer>
 <div class="p-1 footer_bottom">
             <div class="social_icon">
                 <ul class="list-unstyled">

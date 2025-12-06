@@ -1064,13 +1064,13 @@ footer .border-right {
 
 .chapter_main {
     width: 100%;
-    float: left;
-    padding-top: 4em;
+    /* float: left; */
+    padding-top: 5em;
 }
 
 .chapter_head {
     width: 100%;
-    float: left;
+    /* float: left; */
 }
 
 .chapter_head p {
