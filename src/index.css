@@ -70,7 +70,6 @@ section {
 }
 
 footer {
-  /* background: #1b1b27; */
   background-image: url("../images/footerimg.png") !important;
   padding: 0.5em 0;
   border-top: 6px solid #383842;
